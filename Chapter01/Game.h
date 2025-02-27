@@ -61,7 +61,7 @@ private:
 	// Position of paddle2
 	Vector2 mPaddlePos2;
 	
-	std::vector<Ball> ballsVector;
+	std::vector<Ball> ballVect;
 	// Position of ball
 	Vector2 mBallPos;
 	// Velocity of ball

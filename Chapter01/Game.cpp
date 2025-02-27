@@ -82,8 +82,8 @@ bool Game::Initialize()
 	ball2->position.y = 768.0f/2.0f;
 	ball2->velocity.x = -200.0f;
 	ball2->velocity.y = -235.0f;
-	ballsVector.push_back(*ball1);
-	ballsVector.push_back(*ball2);
+	ballVect.push_back(*ball1);
+	ballVect.push_back(*ball2);
 	return true;
 }
 
@@ -189,64 +189,64 @@ void Game::UpdateGame()
 	}
 	
 	//update balls pos based on velocity
-	for (int i = 0; i<ballsVector.capacity(); i++)
+	for (auto &ball : ballVect)
 	{
-		ballsVector.at(i).position.x += ballsVector.at(i).velocity.x * deltaTime;
-		ballsVector.at(i).position.y += ballsVector.at(i).velocity.y * deltaTime;
+		ball.position.x += ball.velocity.x * deltaTime;
+		ball.position.y += ball.velocity.y * deltaTime;
 		// std::cout << "ball " << i << " posx: " << ballsVector.at(i).position.x << std::endl;
 		// std::cout << "ball " << i << " posy: " << ballsVector.at(i).position.y << std::endl;
 	}
 	// Bounce if needed
 	// Did we intersect with the paddle1?
-	for (int i = 0; i<ballsVector.capacity(); i++)
+	for (auto &ball : ballVect)
 	{
-		float diff = mPaddlePos1.y - ballsVector.at(i).position.y;
+		float diff = mPaddlePos1.y - ball.position.y;
 		// Take absolute value of difference
 		diff = (diff > 0.0f) ? diff : -diff;
 		if (
 			// Our y-difference is small enough
 			diff <= paddleH / 2.0f &&
 			// We are in the correct x-position
-			ballsVector.at(i).position.x <= 25.0f && ballsVector.at(i).position.x >= 10.0f &&
+			ball.position.x <= 25.0f && ball.position.x >= 10.0f &&
 			// The ball is moving to the left
-			ballsVector.at(i).velocity.x < 0.0f)
+			ball.velocity.x < 0.0f)
 		{
-			ballsVector.at(i).velocity.x *= -1.0f; //switch the moving direction of the ball
+			ball.velocity.x *= -1.0f; //switch the moving direction of the ball
 		}
 		// Did we intersect with the paddle2?
-		float diff2 = mPaddlePos2.y - ballsVector.at(i).position.y;
+		float diff2 = mPaddlePos2.y - ball.position.y;
 		// Take absolute value of difference
 		diff2 = (diff2 > 0.0f) ? diff2 : -diff2;
 		if (
 			// Our y-difference is small enough
 			diff2 <= paddleH / 2.0f &&
 			// We are in the correct x-position for paddle 2
-			ballsVector.at(i).position.x <= 1015.0f && ballsVector.at(i).position.x >= 1000.0f &&
+			ball.position.x <= 1015.0f && ball.position.x >= 1000.0f &&
 			// The ball is moving to the right
-			ballsVector.at(i).velocity.x > 0.0f)
+			ball.velocity.x > 0.0f)
 		{
-			ballsVector.at(i).velocity.x *= -1.0f; //switch the moving direction of the ball
+			ball.velocity.x *= -1.0f; //switch the moving direction of the ball
 		}
 		// Did the ball go off the screen left? (if so, end game)
-		else if (ballsVector.at(i).position.x <= 0.0f)
+		else if (ball.position.x <= 0.0f)
 		{
 			mIsRunning = false;
 		}
 		// Did the ball go off the screen right? (if so, end game)
-		else if (ballsVector.at(i).position.x >= (1024.0f - thickness))
+		else if (ball.position.x >= (1024.0f - thickness))
 		{
 			mIsRunning = false;
 		}
 			// Did the ball collide with the top wall?
-		if (ballsVector.at(i).position.y <= thickness && ballsVector.at(i).velocity.y < 0.0f)
+		if (ball.position.y <= thickness && ball.velocity.y < 0.0f)
 		{
-			ballsVector.at(i).velocity.y *= -1;
+			ball.velocity.y *= -1;
 		}
 		// Did the ball collide with the bottom wall?
-		else if (ballsVector.at(i).position.y >= (768 - thickness) &&
-			ballsVector.at(i).velocity.y > 0.0f)
+		else if (ball.position.y >= (768 - thickness) &&
+			ball.velocity.y > 0.0f)
 		{
-			ballsVector.at(i).velocity.y *= -1;
+			ball.velocity.y *= -1;
 		}
 	}
 }
@@ -303,7 +303,7 @@ void Game::GenerateOutput()
 	};
 	SDL_RenderFillRect(mRenderer, &paddle2);
 
-	for (auto elem : ballsVector)
+	for (auto &elem : ballVect)
 	{
 		// color ball
 		SDL_SetRenderDrawColor(mRenderer, static_cast<int>(elem.position.x), static_cast<int>(elem.position.x), static_cast<int>(elem.position.x), 255);
