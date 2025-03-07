@@ -46,6 +46,17 @@ public:
 	// Add/remove components
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
+	std::vector<Component*> GetComponents() { return mComponents; }
+	Component* FindComponent(Component* component)
+	{
+		for (auto it = mComponents.begin(); it != mComponents.end(); it++)
+		{
+			if (*it == component)
+			{
+				return *it;
+			}
+		}
+	}
 private:
 	// Actor's state
 	State mState;

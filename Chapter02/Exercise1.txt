@@ -1,0 +1,96 @@
+﻿GUARDA TUTTE LE CLASSI DEL PROGETTO.
+PROVA A VEDERE LA SAOSTITUIZIONE DEI RAW POINTERSA CON GLI SDMART POINTERS
+FFAI GLI ESERCIZI.
+
+
+1.  Consider an animal safari game where the player can drive around in different vehicles to
+    observe animals in the wild. Think about the different types of creatures, plants, and vehicles
+    that might exist in such a game. How might you implement these objects in a monolithic class
+    hierarchy object model?
+    Now consider the same game but implemented with a component game object model. How
+    might you implement this? Which of these two approaches seems more beneficial for this
+    game?
+
+ANSWER: 
+
+
+---- MONOLITIC IMPLEMENTATION ----
+/*the game Object that controll the logic of alive and dead actors*/
+Game{
+std::vector<Actor>
+
+}
+
+/*generic actor in the scene that can be placed*/
+Actor (Trasfrom){
+class enum{
+isAlive,
+isDead,
+}
+BeginPlay();
+Update();
+OnDestroy();
+}
+
+RenderedActor(Sprite) : public Actor{
+Draw();
+SetTexture();
+}
+
+Creature(stats) : RenderedActor{
+}
+
+Plant(stats) : RenderedActor{}
+
+Vehicles(speed) : RenderedActor{
+
+}
+
+VehicleType() : Vehicles{}
+
+---- MONOLITIC IMPLEMENTATION ----
+
+---- COMPONENT IMPLEMENTATION ----
+
+Game(){
+std::vector<Actor*>
+}
+
+Actor(){
+std::vector<Component*>;
+Addcomp();
+RemoveComp();
+}
+
+Component(){
+UpdateComponent();
+}
+
+SpriteRenderComp() : public Component;
+TrasformComp() : public Component;
+
+Creature(stats) : Actor{
+componentTrasfrom;
+componentSprite;
+}
+
+Plant(stats) : Actor{
+componentTrasfrom;
+componentSprite;
+}
+
+Vehicles(speed) : Actor{
+componentTrasfrom;
+componentSprite;
+}
+
+---- COMPONENT IMPLEMENTATION ----
+
+
+
+continua da qui
+1. sono arrivato al punto in cui io da inputCmponent, che poi è ancora nel player, voglio dare all'AnimationSpriterenderer component le info che servono per cambiare stato di animazione,
+per farlo stavo provando ad utilizzare una funzione che ho messo nell'actor.h che è FindComponent, ma capire come implementarlo correttamente perchè così non worka.
+
+
+*/

@@ -17,13 +17,15 @@ Ship::Ship(Game* game)
 {
 	// Create an animated sprite component
 	AnimSpriteComponent* asc = new AnimSpriteComponent(this);
+	std::vector<std::vector<SDL_Texture*>> animationsSlots;
 	std::vector<SDL_Texture*> anims = {
 		game->GetTexture("Assets/Ship01.png"),
 		game->GetTexture("Assets/Ship02.png"),
 		game->GetTexture("Assets/Ship03.png"),
 		game->GetTexture("Assets/Ship04.png"),
 	};
-	asc->SetAnimTextures(anims);
+	animationsSlots.push_back(anims);
+	asc->SetAnimTextures(animationsSlots);
 }
 
 void Ship::UpdateActor(float deltaTime)
