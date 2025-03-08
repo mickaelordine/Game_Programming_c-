@@ -54,4 +54,5 @@ private:
 
 	// Game-specific
 	class Ship* mShip; // Player's ship
+	class Skeleton* mSkeleton; //player skeleton animated
 };

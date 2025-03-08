@@ -92,5 +92,7 @@ continua da qui
 1. sono arrivato al punto in cui io da inputCmponent, che poi è ancora nel player, voglio dare all'AnimationSpriterenderer component le info che servono per cambiare stato di animazione,
 per farlo stavo provando ad utilizzare una funzione che ho messo nell'actor.h che è FindComponent, ma capire come implementarlo correttamente perchè così non worka.
 
+2. ho creato un template all'interno di actor.h che ti ritorno il tipo che ti interessa, basta che sia un component. C'è un probelma, crasha.
+secondo me è il dynamic cast che non fa funzionare il codice, non so bisogna controllare bene. Riparti  da qui.
 
 */

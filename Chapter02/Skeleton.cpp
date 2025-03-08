@@ -1,6 +1,11 @@
 ﻿#include "Skeleton.h"
+
+#include <iostream>
+
 #include "AnimSpriteComponent.h"
 #include "Game.h"
+
+
 
 Skeleton::Skeleton(Game* game)
     :Actor(game)
@@ -44,6 +49,7 @@ Skeleton::Skeleton(Game* game)
 void Skeleton::UpdateActor(float deltaTime)
 {
     Actor::UpdateActor(deltaTime);
+    
     // Update position based on speeds and delta time
     Vector2 pos = GetPosition();
     pos.x += mRightSpeed * deltaTime;
@@ -69,31 +75,36 @@ void Skeleton::UpdateActor(float deltaTime)
 
 void Skeleton::ProcessKeyboard(const uint8_t* state)
 {
-    mRightSpeed = 0.0f;
-    // right/left
-    if (state[SDL_SCANCODE_D])
-    {
-        mRightSpeed += 250.0f;
-    }
-    if (state[SDL_SCANCODE_A])
-    {
-        mRightSpeed -= 250.0f;
-    }
-    // Jump
-    if (state[SDL_SCANCODE_W])
-    {
-        
-    }
-    if (state[SDL_SCANCODE_S])
-    {
-        
-    }
-    //punch
-    if (state[SDL_SCANCODE_SPACE])
-    {
-        
-    }
-        
+    // mRightSpeed = 0.0f;
+    // // right/left
+    // if (state[SDL_SCANCODE_D])
+    // {
+    //     mRightSpeed += 250.0f;
+    //     this->GetComponent<AnimSpriteComponent>()->SetAnimationState(AnimSpriteComponent::moving);
+    // }
+    // if (state[SDL_SCANCODE_A])
+    // {
+    //     mRightSpeed -= 250.0f;
+    //     this->GetComponent<AnimSpriteComponent>()->SetAnimationState(AnimSpriteComponent::moving);
+    // }
+    // // Jump
+    // if (state[SDL_SCANCODE_W])
+    // {
+    //     mDownSpeed += 250.0f;
+    //     this->GetComponent<AnimSpriteComponent>()->SetAnimationState(AnimSpriteComponent::jumping);
+    // }
+    // if (state[SDL_SCANCODE_S])
+    // {
+    //     mDownSpeed -= 250.0f;
+    //     this->GetComponent<AnimSpriteComponent>()->SetAnimationState(AnimSpriteComponent::jumping);
+    // }
+    // //punch
+    // if (state[SDL_SCANCODE_SPACE])
+    // {
+    //     this->GetComponent<AnimSpriteComponent>()->SetAnimationState(AnimSpriteComponent::punching);
+    // }
+
+    //here we need to add an idle animation state       
     
 }
 

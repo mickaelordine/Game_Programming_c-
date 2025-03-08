@@ -7,7 +7,11 @@
 // ----------------------------------------------------------------
 
 #pragma once
+#include <iostream>
+#include <ostream>
 #include <vector>
+
+#include "Component.h"
 #include "Math.h"
 class Actor
 {
@@ -46,17 +50,21 @@ public:
 	// Add/remove components
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
-	std::vector<Component*> GetComponents() { return mComponents; }
-	Component* FindComponent(Component* component)
-	{
-		for (auto it = mComponents.begin(); it != mComponents.end(); it++)
+	
+	template<typename T>
+	T* GetComponent()
 		{
-			if (*it == component)
-			{
-				return *it;
+			static_assert(std::is_base_of<Component, T>::value, "T deve essere un tipo che estende Component");
+
+			for (Component* component : mComponents) {
+				if (auto casted = dynamic_cast<T*>(component))
+				{
+					return casted;
+				}
 			}
+			return nullptr; // Nessun componente trovato
 		}
-	}
+	
 private:
 	// Actor's state
 	State mState;
