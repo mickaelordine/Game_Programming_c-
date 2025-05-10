@@ -29,7 +29,7 @@ Asteroid::Asteroid(Game* game)
 	sc->SetTexture(game->GetTexture("Assets/Asteroid.png"));
 
 	// Create a move component, and set a forward speed
-	MoveComponent* mc = new MoveComponent(this);
+	MoveComponent* mc = new MoveComponent(this, 1, Vector2(this->GetForward().x * 100.0f, this->GetForward().y * 100.0f));
 	mc->SetForwardSpeed(150.0f);
 
 	// Create a circle component (for collision)
