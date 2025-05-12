@@ -11,6 +11,8 @@
 class AIState
 {
 public:
+	virtual ~AIState() = default;
+
 	AIState(class AIComponent* owner)
 		:mOwner(owner)
 	{ }

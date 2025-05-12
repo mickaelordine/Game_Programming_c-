@@ -16,6 +16,7 @@ public:
 	~Enemy();
 	void UpdateActor(float deltaTime) override;
 	class CircleComponent* GetCircle() { return mCircle; }
+	class AIComponent* ai_component;
 private:
 	class CircleComponent* mCircle;
 };

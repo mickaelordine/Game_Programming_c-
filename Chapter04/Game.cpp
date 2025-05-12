@@ -13,8 +13,8 @@
 #include "SpriteComponent.h"
 #include "Grid.h"
 #include "Enemy.h"
-#include "AIComponent.h"
-#include "AIState.h"
+#include "States/AIComponent.h"
+#include "States/AIState.h"
 
 Game::Game()
 :mWindow(nullptr)

@@ -14,9 +14,12 @@ class Tower : public Actor
 public:
 	Tower(class Game* game);
 	void UpdateActor(float deltaTime) override;
+	class AIComponent* ai_component;
+	int GetAmmo() { return ammo; }
+	void SetAmmo(int p_ammo) { this->ammo = p_ammo; }
+	
 private:
 	class MoveComponent* mMove;
 	float mNextAttack;
-	const float AttackTime = 2.5f;
-	const float AttackRange = 100.0f;
+	int ammo = 5;
 };

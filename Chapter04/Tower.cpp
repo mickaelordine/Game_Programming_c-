@@ -12,6 +12,11 @@
 #include "Game.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "States/AIComponent.h"
+#include "States/TowerStates/IdleState.h"
+#include "States/TowerStates/OverdriveState.h"
+#include "States/TowerStates/ReloadState.h"
+#include "States/TowerStates/ShootState.h"
 
 Tower::Tower(class Game* game)
 :Actor(game)
@@ -21,33 +26,19 @@ Tower::Tower(class Game* game)
 	
 	mMove = new MoveComponent(this);
 	//mMove->SetAngularSpeed(Math::Pi);
+
+	//setting up state machine
+	ai_component = new AIComponent(this);
+	ai_component->RegisterState(new IdleState(ai_component, this));
+	ai_component->RegisterState(new ShootState(ai_component, this));
+	ai_component->RegisterState(new ReloadState(ai_component, this));
+	ai_component->RegisterState(new OverdriveState(ai_component, this));
+	ai_component->ChangeState("Idle");
 	
-	mNextAttack = AttackTime;
 }
 
 void Tower::UpdateActor(float deltaTime)
 {
 	Actor::UpdateActor(deltaTime);
 	
-	mNextAttack -= deltaTime;
-	if (mNextAttack <= 0.0f)
-	{
-		Enemy* e = GetGame()->GetNearestEnemy(GetPosition());
-		if (e != nullptr)
-		{
-			// Vector from me to enemy
-			Vector2 dir = e->GetPosition() - GetPosition();
-			float dist = dir.Length();
-			if (dist < AttackRange)
-			{
-				// Rotate to face enemy
-				SetRotation(Math::Atan2(-dir.y, dir.x));
-				// Spawn bullet at tower position facing enemy
-				Bullet* b = new Bullet(GetGame());
-				b->SetPosition(GetPosition());
-				b->SetRotation(GetRotation());
-			}
-		}
-		mNextAttack += AttackTime;
-	}
 }
