@@ -184,10 +184,138 @@ int BoardState::GetFourInARow() const
 	return 0;
 }
 
+float BoardState::AlphaBeta(int depth, float alpha, float beta, bool isMaximizing) const
+{
+	if (depth == 0 || IsTerminal())
+		return GetScore();
+
+	std::vector<BoardState*> moves = GetPossibleMoves(isMaximizing ? Red : Yellow);
+	float bestScore = isMaximizing ? -FLT_MAX : FLT_MAX;
+
+	for (auto move : moves)
+	{
+		float score = move->AlphaBeta(depth - 1, alpha, beta, !isMaximizing);
+
+		if (isMaximizing)
+		{
+			bestScore = std::max(bestScore, score);
+			alpha = std::max(alpha, bestScore);
+		}
+		else
+		{
+			bestScore = std::min(bestScore, score);
+			beta = std::min(beta, bestScore);
+		}
+
+		delete move;
+
+		if (beta <= alpha)
+			break; // pruning
+	}
+
+	return bestScore;
+}
+
+
 float BoardState::CalculateHeuristic() const
 {
-	// TODO: You could change this to calculate an actual heuristic
-	return 0.0f;
+	const SquareState cpu = Red;
+	const SquareState player = Yellow;
+
+	float score = 0;
+
+	// Analizza tutte le righe (orizzontali)
+	for (int row = 0; row < 6; ++row)
+	{
+		for (int col = 0; col <= 7 - 4; ++col) // finestre da 4
+		{
+			std::vector<SquareState> window = {
+				mBoard[row][col],
+				mBoard[row][col + 1],
+				mBoard[row][col + 2],
+				mBoard[row][col + 3]
+			};
+			if (col == 4)
+				score += 600; //aumenti il valore se ci troviamo nella cella centrale che è la più forte
+			score += ScoreWindow(window, cpu, player);
+		}
+	}
+
+	// Colonne (verticali)
+	for (int col = 0; col < 7; ++col)
+	{
+		for (int row = 0; row <= 6 - 4; ++row)
+		{
+			std::vector<SquareState> window = {
+				mBoard[row][col],
+				mBoard[row + 1][col],
+				mBoard[row + 2][col],
+				mBoard[row + 3][col]
+			};
+			if (col == 4)
+				score += 600; //aumenti il valore se ci troviamo nella cella centrale che è la più forte
+			score += ScoreWindow(window, cpu, player);
+		}
+	}
+
+	// Diagonali ↘
+	for (int row = 0; row <= 6 - 4; ++row)
+	{
+		for (int col = 0; col <= 7 - 4; ++col)
+		{
+			std::vector<SquareState> window = {
+				mBoard[row][col],
+				mBoard[row + 1][col + 1],
+				mBoard[row + 2][col + 2],
+				mBoard[row + 3][col + 3]
+			};
+			if (col == 4)
+				score += 600; //aumenti il valore se ci troviamo nella cella centrale che è la più forte
+			score += ScoreWindow(window, cpu, player);
+		}
+	}
+
+	// Diagonali ↙
+	for (int row = 0; row <= 6 - 4; ++row)
+	{
+		for (int col = 3; col < 7; ++col)
+		{
+			std::vector<SquareState> window = {
+				mBoard[row][col],
+				mBoard[row + 1][col - 1],
+				mBoard[row + 2][col - 2],
+				mBoard[row + 3][col - 3]
+			};
+			if (col == 4)
+				score += 600; //aumenti il valore se ci troviamo nella cella centrale che è la più forte
+			score += ScoreWindow(window, cpu, player);
+		}
+	}
+
+	return score;
+}
+
+float BoardState::ScoreWindow(std::vector<BoardState::SquareState>& window, BoardState::SquareState cpu, BoardState::SquareState player) const
+{
+	int cpuCount = 0;
+	int playerCount = 0;
+	int emptyCount = 0;
+
+	for (auto s : window)
+	{
+		if (s == cpu) cpuCount++;
+		else if (s == player) playerCount++;
+		else emptyCount++;
+	}
+
+	// Valutazione semplice:
+	if (cpuCount == 4) return 1000;
+	if (cpuCount == 3 && emptyCount == 1) return 100;
+	if (cpuCount == 2 && emptyCount == 2) return 10;
+	if (playerCount == 3 && emptyCount == 1) return -100; // minaccia avversaria
+	if (playerCount == 2 && emptyCount == 2) return -10;
+
+	return 0;
 }
 
 bool TryPlayerMove(BoardState* state, int column)
@@ -206,18 +334,29 @@ bool TryPlayerMove(BoardState* state, int column)
 	return false;
 }
 
+
+//this one need a modified AI to choose a correct move using alpha-beta pruning with a depth cutoff.
 void CPUMove(BoardState* state)
 {
-	// For now, this just randomly picks one of the possible moves
+
 	std::vector<BoardState*> moves = state->GetPossibleMoves(BoardState::Red);
+	float bestScore = -FLT_MAX;
+	BoardState* bestMove = nullptr;
 
-	int index = Random::GetIntRange(0, moves.size() - 1);
-
-	*state = *moves[index];
-
-	// Clear up memory from possible moves
-	for (auto state : moves)
+	for (auto move : moves)
 	{
-		delete state;
+		float score = move->AlphaBeta(4, -FLT_MAX, FLT_MAX, true); // depth cutoff = 5, the larger, the better but more complex in term of cost
+		if (score > bestScore)
+		{
+			bestScore = score;
+			bestMove = move;
+		}
 	}
+
+	if (bestMove)
+		*state = *bestMove;
+
+	// Clean up
+	for (auto move : moves)
+		delete move;
 }
