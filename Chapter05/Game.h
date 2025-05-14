@@ -13,6 +13,11 @@
 #include <vector>
 #include "Math.h"
 
+struct RGBA
+{
+	float r,g,b,a;
+};
+
 class Game
 {
 public:
@@ -68,4 +73,13 @@ private:
 	// Game-specific
 	class Ship* mShip;
 	std::vector<class Asteroid*> mAsteroids;
+
+	std::vector<RGBA*> mColors;
+
+	RGBA* mBlack;
+	RGBA* mBlue;
+	RGBA* mViolet;
+	RGBA* mCurrentColor;
+	int mCurrentIndex = 0;
+
 };

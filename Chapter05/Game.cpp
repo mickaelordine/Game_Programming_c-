@@ -12,6 +12,8 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include <algorithm>
+#include <iostream>
+
 #include "Actor.h"
 #include "SpriteComponent.h"
 #include "Actor.h"
@@ -75,6 +77,8 @@ bool Game::Initialize()
 	// so clear it
 	glGetError();
 	
+
+	
 	// Make sure we can create/compile shaders
 	if (!LoadShaders())
 	{
@@ -88,7 +92,34 @@ bool Game::Initialize()
 	LoadData();
 
 	mTicksCount = SDL_GetTicks();
+
+
+	/*initialized the colors for the background, it start from violet color*/
+	mCurrentColor = new RGBA();
+	mCurrentColor->r = 0.5f;
+	mCurrentColor->g = 0.0f;
+	mCurrentColor->b = 0.5f;
+	mCurrentColor->a = 1.0f;
 	
+	mBlack = new RGBA();
+	mBlack->r = 0.0f;
+	mBlack->g = 0.0f;
+	mBlack->b = 0.0f;
+	mBlack->a = 1.0f;
+	mColors.emplace_back(mBlack);
+	mBlue = new RGBA();
+	mBlue->r = 0.0f;
+	mBlue->g = 0.0f;
+	mBlue->b = 1.0f;
+	mBlue->a = 1.0f;
+	mColors.emplace_back(mBlue);
+	mViolet = new RGBA();
+	mViolet->r = 0.5f;
+	mViolet->g = 0.0f;
+	mViolet->b = 0.5f;
+	mViolet->a = 1.0f;
+	mColors.emplace_back(mViolet);
+		
 	return true;
 }
 
@@ -174,12 +205,46 @@ void Game::UpdateGame()
 	{
 		delete actor;
 	}
+
+	//refresh ColorBackground
+	if (mCurrentIndex == 3)
+		mCurrentIndex = 0;
+	std::cout << "R: " << mCurrentColor->r << "G: " << mCurrentColor->g << "B: " << mCurrentColor->b << "A:" << mCurrentColor->a << std::endl;
+	// Update the clear Color
+	float diffAmountR = mCurrentColor->r - mColors[mCurrentIndex]->r;
+	float diffAmountG = mCurrentColor->g - mColors[mCurrentIndex]->g;
+	float diffAmountB = mCurrentColor->b - mColors[mCurrentIndex]->b;
+	float diffAmountA = mCurrentColor->a - mColors[mCurrentIndex]->a;
+	if (!Math::NearZero(diffAmountR) || !Math::NearZero(diffAmountG) || !Math::NearZero(diffAmountB) || !Math::NearZero(diffAmountA))
+	{
+		if (diffAmountR > 0.0f)
+			mCurrentColor->r -= deltaTime * Math::Abs(diffAmountR);
+		else
+			mCurrentColor->r += deltaTime * Math::Abs(diffAmountR);
+		if (diffAmountG > 0.0f)
+			mCurrentColor->g -= deltaTime * Math::Abs(diffAmountG);
+		else
+			mCurrentColor->g += deltaTime * Math::Abs(diffAmountG);
+		if (diffAmountB > 0.0f)
+			mCurrentColor->b -= deltaTime * Math::Abs(diffAmountB);
+		else
+			mCurrentColor->b += deltaTime * Math::Abs(diffAmountB);
+		if (diffAmountA > 0.0f)
+			mCurrentColor->a -= deltaTime * Math::Abs(diffAmountA);
+		else
+			mCurrentColor->a += deltaTime * Math::Abs(diffAmountA);
+	}
+	else
+	{
+		mCurrentIndex++;
+	}
+
 }
 
 void Game::GenerateOutput()
 {
 	// Set the clear color to grey
-	glClearColor(0.86f, 0.86f, 0.86f, 1.0f);
+	glClearColor(mCurrentColor->r, mCurrentColor->g, mCurrentColor->b, mCurrentColor->a);
 	// Clear the color buffer
 	glClear(GL_COLOR_BUFFER_BIT);
 	
@@ -199,6 +264,8 @@ void Game::GenerateOutput()
 	// Swap the buffers
 	SDL_GL_SwapWindow(mWindow);
 }
+
+
 
 bool Game::LoadShaders()
 {
