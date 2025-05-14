@@ -25,6 +25,8 @@ Shader::~Shader()
 
 }
 
+
+
 bool Shader::Load(const std::string& vertName, const std::string& fragName)
 {
 	// Compile vertex and pixel shaders

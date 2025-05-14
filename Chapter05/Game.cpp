@@ -209,7 +209,6 @@ void Game::UpdateGame()
 	//refresh ColorBackground
 	if (mCurrentIndex == 3)
 		mCurrentIndex = 0;
-	std::cout << "R: " << mCurrentColor->r << "G: " << mCurrentColor->g << "B: " << mCurrentColor->b << "A:" << mCurrentColor->a << std::endl;
 	// Update the clear Color
 	float diffAmountR = mCurrentColor->r - mColors[mCurrentIndex]->r;
 	float diffAmountG = mCurrentColor->g - mColors[mCurrentIndex]->g;
@@ -285,10 +284,10 @@ bool Game::LoadShaders()
 void Game::CreateSpriteVerts()
 {
 	float vertices[] = {
-		-0.5f,  0.5f, 0.f, 0.f, 0.f, // top left
-		 0.5f,  0.5f, 0.f, 1.f, 0.f, // top right
-		 0.5f, -0.5f, 0.f, 1.f, 1.f, // bottom right
-		-0.5f, -0.5f, 0.f, 0.f, 1.f  // bottom left
+		-0.5f,  0.5f, 0.f, 0.f, 0.f, 1.0f, 0.0f, 0.0f, // rosso // top left
+		 0.5f,  0.5f, 0.f, 1.f, 0.f, 0.0f, 1.0f, 0.0f, // verde // top right
+		 0.5f, -0.5f, 0.f, 1.f, 1.f, 0.0f, 0.0f, 1.0f, // blu // bottom right
+		-0.5f, -0.5f, 0.f, 0.f, 1.f, 1.0f, 1.0f, 0.0f  // giallo// bottom left
 	};
 
 	unsigned int indices[] = {
